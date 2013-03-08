@@ -71,7 +71,10 @@
     <h2>How do I do this in <code>R</code>? - Example</h2>
   </hgroup>
   <article>
-    <pre><code class="r">### read in brain image
+    <pre><code class="r">### code to generate figure is in Example_WebGL_Template - didn&#39;t want to
+### repeat
+
+### read in brain image
 tmp &lt;- readNIfTI(file.path(datadir, &quot;MNI152_T1_2mm_brain.nii&quot;), reorient = FALSE)
 
 ### make the surface object - RGL renders
@@ -81,6 +84,7 @@ contour3d(template, x = 1:dim(temp)[1], y = 1:dim(temp)[2], z = 1:dim(temp)[3],
 ### export this to a webpage
 writeWebGL_split(dir = file.path(outdir, &quot;webGL&quot;), width = 700, height = 500, 
     template = file.path(outdir, &quot;my_template.html&quot;))
+
 </code></pre>
 
   </article>

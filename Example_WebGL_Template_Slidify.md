@@ -21,7 +21,6 @@ mode        : selfcontained # {standalone, draft}
 
 ---
 
-
 ## Example of 3D in `R` 
 
 <object data="knitted_webGL.html" width="800" height="600"> <embed src="knitted_webGL.html" width="800" height="600"> </embed> Error: Embedded data could not be displayed. </object>
@@ -33,6 +32,9 @@ mode        : selfcontained # {standalone, draft}
 
 
 ```r
+### code to generate figure is in Example_WebGL_Template - didn't want to
+### repeat
+
 ### read in brain image
 tmp <- readNIfTI(file.path(datadir, "MNI152_T1_2mm_brain.nii"), reorient = FALSE)
 
@@ -43,6 +45,7 @@ contour3d(template, x = 1:dim(temp)[1], y = 1:dim(temp)[2], z = 1:dim(temp)[3],
 ### export this to a webpage
 writeWebGL_split(dir = file.path(outdir, "webGL"), width = 700, height = 500, 
     template = file.path(outdir, "my_template.html"))
+
 ```
 
 
