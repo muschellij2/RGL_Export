@@ -1,0 +1,86 @@
+Title
+========================================================
+
+This is an example of embedding brains rendered in WebGL in a knitted document.
+
+```{r setup, echo=FALSE, results='hide', message=FALSE}
+## Isosurfaces of a brain With WebGL
+## Splitting function courtesy of Duncan Murdoch
+## Open in Safari - make sure Developer -> Enable WebGL clicked
+## Should also open in Chrome (Firefox has initialization problem)
+## Can comment out datadir/outdir 
+## Clear the workspace - rm(list=ls())
+
+
+require(oro.nifti) # for reading
+require(rgl) # for rendering
+require(knitr)
+require(misc3d) # for contours
+#################
+## may need updated knitr for webgl hook
+## use code below:
+## require(devtools)
+## install_github("knitr", username="yihui")
+#################
+
+hook_split_webgl <- function(before, options, envir) {
+  library(rgl)
+  ## after a chunk has been evaluated
+  if (before || rgl.cur() == 0) return()  # no active device
+  name = tempfile('rgl', '.', '.html'); on.exit(unlink(name))
+  par3d(windowRect = 100 + options$dpi * c(0, 0, options$fig.width, options$fig.height))
+  Sys.sleep(.05) # need time to respond to window size change
+
+  writeLines(c('%WebGL%', '<script>webGLStart();</script>'), tpl <- tempfile())
+  warning("writing webGL to knitted doc")
+  writeWebGL_split(dir = dirname(name), filename = name, template = tpl)
+  res = readLines(name)
+  res = res[!grepl('^\\s*$', res)] # remove blank lines
+  paste(gsub('^\\s*<', '<', res), collapse = '\n') # no spaces before HTML tags
+}
+
+### setting hooks and options - can change options obviously
+knit_hooks$set(webgl = hook_split_webgl)
+opts_chunk$set(echo=FALSE, prompt=FALSE, messages=FALSE, warning=FALSE)
+
+
+### writeWebGL_split - has add on for splitting triangles to maximum number of vertices
+### use writeIt = FALSE for knitr - just splits up triangles
+source('writeWebGL_split.R', chdir = FALSE)
+```
+
+```{r read_data}
+### Template from MNI152 from FSL
+template <- readNIfTI("MNI152_T1_2mm_brain.nii.gz", reorient=FALSE)
+```
+
+```{r makegl, webgl=TRUE, results='hide'}
+### threshold for brain image - just the overall brain
+### make lower for smoother surface - 4500 has good mix of features
+### 1000 is smooth
+cut <- 4500
+
+dtemp <- dim(template)
+contour3d(template, x=1:dtemp[1], y=1:dtemp[2], z=1:dtemp[3], level = cut, alpha = 0.1, draw = TRUE)
+
+### this would be the ``activation'' or surface you want to render 
+### here just taking the upper WM from the template image
+contour3d(template, level = c(8200, 8250), alpha = c(0.5, 0.8), add = TRUE, color=c("yellow", "red"))
+
+### add text
+text3d(x=dtemp[1]/2, y=dtemp[2]/2, z = dtemp[3]*0.98, text="Top")
+text3d(x=dtemp[1]*0.98, y=dtemp[2]/2, z = dtemp[3]/2, text="Right")
+########
+##### If you're data is small  - use command below 
+###### writeWebGL_split(writeIt=FALSE, verb=FALSE) 
+#### and remove rgl.quit() in the code below
+##### (and use onload="webGLStart();" in body) - see README
+####### RStudio failed whhen the file was too large so just
+##### write the html and embed it
+writeWebGL_split(dir=getwd(), filename ="knitted_webGL.html", template = "my_template.html", width=500)
+rgl.quit()
+
+```
+
+<object data="knitted_webGL.html" width="800" height="600"> <embed src="knitted_webGL.html" width="800" height="600"> </embed> Error: Embedded data could not be displayed. </object>
+
