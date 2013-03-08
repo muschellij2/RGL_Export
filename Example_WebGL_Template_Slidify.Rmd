@@ -1,0 +1,46 @@
+---
+title       : Embed into Slidify
+subtitle    : 
+author      : John Muschelli
+job         : Johns Hopkins Bloomberg School of Public Health
+framework   : io2012        # {io2012, html5slides, shower, dzslides, ...}
+highlighter : highlight.js  # {highlight.js, prettify, highlight}
+hitheme     : hemisu-dark      # 
+widgets     : []            # {mathjax, quiz, bootstrap}
+mode        : selfcontained # {standalone, draft}
+---
+
+
+## R programs used for this presentation
+
+* `knitr` - parse markdown
+* `slidify` - make slides
+* `RStudio` - use for knitting
+* `rgl` and `misc3d` - 3D rendering
+* `oro.nifti` for reading in data
+
+---
+
+## Example of 3D in `R` 
+
+<object data="knitted_webGL.html" width="800" height="600"> <embed src="knitted_webGL.html" width="800" height="600"> </embed> Error: Embedded data could not be displayed. </object>
+
+---
+
+
+## How do I do this in `R`? - Example
+
+```{r ex_code, eval=FALSE, echo=TRUE}
+### code to generate figure is in Example_WebGL_Template - didn't want to repeat
+
+### read in brain image
+tmp <- readNIfTI(file.path(datadir, "MNI152_T1_2mm_brain.nii"), reorient=FALSE)
+
+### make the surface object - RGL renders
+contour3d(template, x=1:dim(temp)[1], y=1:dim(temp)[2], z=1:dim(temp)[3], level = 3500, alpha = 0.15)
+
+### export this to a webpage
+writeWebGL_split(dir=file.path(outdir, "webGL"), width=700, height=500, template= file.path(outdir, "my_template.html"))
+
+```
+

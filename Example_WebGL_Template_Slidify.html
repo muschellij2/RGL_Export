@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Embed into Slidify</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Embed into Slidify">
+  <meta name="author" content="John Muschelli">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/hemisu-dark.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+    
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+    <!-- END LOGO SLIDE -->
+    
+
+    <!-- TITLE SLIDE -->
+    <!-- Should I move this to a Local Layout File? -->
+    <slide class="title-slide segue nobackground">
+      <hgroup class="auto-fadein">
+        <h1>Embed into Slidify</h1>
+        <h2></h2>
+        <p>John Muschelli<br/>Johns Hopkins Bloomberg School of Public Health</p>
+      </hgroup>
+          </slide>
+
+    <!-- SLIDES -->
+      <slide class="" id="slide-1" style="background:;">
+  <hgroup>
+    <h2>R programs used for this presentation</h2>
+  </hgroup>
+  <article>
+    <ul>
+<li><code>knitr</code> - parse markdown</li>
+<li><code>slidify</code> - make slides</li>
+<li><code>RStudio</code> - use for knitting</li>
+<li><code>rgl</code> and <code>misc3d</code> - 3D rendering</li>
+<li><code>oro.nifti</code> for reading in data</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+      <slide class="" id="slide-2" style="background:;">
+  <hgroup>
+    <h2>Example of 3D in <code>R</code></h2>
+  </hgroup>
+  <article>
+    <p><object data="knitted_webGL.html" width="800" height="600"> <embed src="knitted_webGL.html" width="800" height="600"> </embed> Error: Embedded data could not be displayed. </object></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+      <slide class="" id="slide-3" style="background:;">
+  <hgroup>
+    <h2>How do I do this in <code>R</code>? - Example</h2>
+  </hgroup>
+  <article>
+    <pre><code class="r">### read in brain image
+tmp &lt;- readNIfTI(file.path(datadir, &quot;MNI152_T1_2mm_brain.nii&quot;), reorient = FALSE)
+
+### make the surface object - RGL renders
+contour3d(template, x = 1:dim(temp)[1], y = 1:dim(temp)[2], z = 1:dim(temp)[3], 
+    level = 3500, alpha = 0.15)
+
+### export this to a webpage
+writeWebGL_split(dir = file.path(outdir, &quot;webGL&quot;), width = 700, height = 500, 
+    template = file.path(outdir, &quot;my_template.html&quot;))
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+
+  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+<!-- Grab CDN jQuery, fall back to local if offline -->
+<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+<script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery-1.7.min.js"><\/script>')</script>
+<!-- Load Javascripts for Widgets -->
+<!-- LOAD HIGHLIGHTER JS FILES -->
+<script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<!-- DONE LOADING HIGHLIGHTER JS FILES -->
+</html>
