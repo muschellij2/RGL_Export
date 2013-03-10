@@ -1,0 +1,139 @@
+
+<!-- 
+/*
+ * 
+ *                  xxxxxxx      xxxxxxx
+ *                   x:::::x    x:::::x 
+ *                    x:::::x  x:::::x  
+ *                     x:::::xx:::::x   
+ *                      x::::::::::x    
+ *                       x::::::::x     
+ *                       x::::::::x     
+ *                      x::::::::::x    
+ *                     x:::::xx:::::x   
+ *                    x:::::x  x:::::x  
+ *                   x:::::x    x:::::x 
+ *              THE xxxxxxx      xxxxxxx TOOLKIT
+ *                    
+ *                  http://www.goXTK.com
+ *                   
+ * Copyright (c) 2012 The X Toolkit Developers <dev@goXTK.com>
+ *                   
+ *    The X Toolkit (XTK) is licensed under the MIT License:
+ *      http://www.opensource.org/licenses/mit-license.php
+ *
+ * TAKEN FROM LESSON 11 - Modified 10 March 2013
+ & Template for outputting R to xtk
+ */
+-->
+
+<html>
+<head>
+<title>XTK LESSON 11</title>
+<script type="text/javascript" src="http://get.goXTK.com/xtk_edge.js"></script>
+<script type="text/javascript" src="http://get.goXTK.com/xtk_xdat.gui.js"></script>
+<script>
+window.onload = function() {
+
+  // create and initialize a 3D renderer
+  var r = new X.renderer3D();
+  r.init();
+  
+  var volume1 = new X.volume();
+  volume1.file = 'MNI152_T1_2mm_brain.nii.gz';
+  r.add(volume1);
+  var volume2 = new X.volume();
+  volume2.file = 'Thresholded.nii.gz';
+  r.add(volume2);
+  var volume3 = new X.volume();
+  volume3.file = 'Thresholded.nii.gz';
+  r.add(volume3);
+  var volume4 = new X.volume();
+  volume4.file = 'Thresholded.nii.gz';
+  r.add(volume4);
+  
+  // the onShowtime method gets executed after all files were fully loaded and
+  // just before the first rendering attempt
+  r.onShowtime = function() {
+
+
+  volume1.volumeRendering = true;
+  volume1.visible = true;
+  volume1.minColor = [255, 255, 255];
+  volume1.maxColor = [255, 255, 255];
+  volume1.opacity = 0.20;
+  volume1.lowerThreshold = 4500;
+  volume1.upperThreshold = 4800;
+
+  volume2.volumeRendering = true;
+  volume2.visible = true;
+  volume2.minColor = [255, 0, 0];
+  volume2.maxColor = [255, 0, 0];
+  volume2.opacity = 1.00;
+  volume2.lowerThreshold = 1;
+  volume2.upperThreshold = 1;
+
+  volume3.volumeRendering = true;
+  volume3.visible = false;
+  volume3.minColor = [0, 0, 255];
+  volume3.maxColor = [0, 0, 255];
+  volume3.opacity = 1.00;
+  volume3.lowerThreshold = 1;
+  volume3.upperThreshold = 1;
+
+  volume4.volumeRendering = true;
+  volume4.visible = false;
+  volume4.minColor = [0, 255, 0];
+  volume4.maxColor = [0, 255, 0];
+  volume4.opacity = 1.00;
+  volume4.lowerThreshold = 1;
+  volume4.upperThreshold = 1;
+var gui = new dat.GUI();
+
+  var volumegui1 = gui.addFolder('volume1');
+  var vMapVisibleController1 = volumegui1.add(volume1, 'visible');
+  var opacityController1 = volumegui1.add(volume1, 'opacity', 0, 1).listen();
+  var lowerThresholdController1 = volumegui1.add(volume1, 'lowerThreshold', volume1.min, volume1.max);
+  var upperThresholdController1 = volumegui1.add(volume1, 'lowerThreshold', volume1.min, volume1.max);
+  volumegui1.open();
+
+  var volumegui2 = gui.addFolder('volume2');
+  var vMapVisibleController2 = volumegui2.add(volume2, 'visible');
+  var opacityController2 = volumegui2.add(volume2, 'opacity', 0, 1).listen();
+  var lowerThresholdController2 = volumegui2.add(volume2, 'lowerThreshold', volume2.min, volume2.max);
+  var upperThresholdController2 = volumegui2.add(volume2, 'lowerThreshold', volume2.min, volume2.max);
+  volumegui2.open();
+
+  var volumegui3 = gui.addFolder('volume3');
+  var vMapVisibleController3 = volumegui3.add(volume3, 'visible');
+  var opacityController3 = volumegui3.add(volume3, 'opacity', 0, 1).listen();
+  var lowerThresholdController3 = volumegui3.add(volume3, 'lowerThreshold', volume3.min, volume3.max);
+  var upperThresholdController3 = volumegui3.add(volume3, 'lowerThreshold', volume3.min, volume3.max);
+  volumegui3.open();
+
+  var volumegui4 = gui.addFolder('volume4');
+  var vMapVisibleController4 = volumegui4.add(volume4, 'visible');
+  var opacityController4 = volumegui4.add(volume4, 'opacity', 0, 1).listen();
+  var lowerThresholdController4 = volumegui4.add(volume4, 'lowerThreshold', volume4.min, volume4.max);
+  var upperThresholdController4 = volumegui4.add(volume4, 'lowerThreshold', volume4.min, volume4.max);
+  volumegui4.open();
+    
+
+  };
+  
+    r.camera.position = [120, 40, 120];
+  
+  // showtime! this triggers the loading of the volume and executes
+  // r.onShowtime() once done
+  r.render();
+  
+};
+</script>
+<link rel="stylesheet" type="text/css" href="http://lessons.goxtk.com/11/demo.css">
+
+</head>
+
+<body>
+
+</body>
+</html>
