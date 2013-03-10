@@ -9,7 +9,8 @@ gui <- TRUE
 
 make_xtk <- function(volnames, fname = "R_xtk_output.html", threshold, visible, min.color, 
                      max.color=NULL, alpha, campos = c(120, 40, 120), gui=TRUE){
-
+vnames <- sapply(strsplit(volnames, "/"), function(x) x[length(x)])
+vnames <- sapply(strsplit(vnames, "\\."), function(x) x[1])
 if (is.null(max.color)) max.color <- min.color
 #if (length(color) == 1) color <- rep(color, length(allvols))
 if (length(alpha) == 1) color <- rep(alpha, length(allvols))
@@ -64,7 +65,7 @@ if (gui){
 
   for (ivol in 1:length(volnames)){
     vols <- c(vols, "", 
-                sprintf("  var volumegui%d = gui.addFolder('volume%d');", ivol, ivol),
+                sprintf("  var volumegui%d = gui.addFolder('%s');", ivol, vnames[ivol]),
                 sprintf("  var vMapVisibleController%d = volumegui%d.add(volume%d, 'visible');", ivol, ivol, ivol),
                 sprintf("  var opacityController%d = volumegui%d.add(volume%d, 'opacity', 0, 1).listen();", ivol, ivol, ivol), 
                 sprintf("  var lowerThresholdController%d = volumegui%d.add(volume%d, 'lowerThreshold', volume%d.min, volume%d.max);", ivol, ivol, ivol, ivol, ivol), 
