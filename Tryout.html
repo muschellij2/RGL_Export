@@ -1,0 +1,150 @@
+
+<!-- 
+/*
+ * 
+ *                  xxxxxxx      xxxxxxx
+ *                   x:::::x    x:::::x 
+ *                    x:::::x  x:::::x  
+ *                     x:::::xx:::::x   
+ *                      x::::::::::x    
+ *                       x::::::::x     
+ *                       x::::::::x     
+ *                      x::::::::::x    
+ *                     x:::::xx:::::x   
+ *                    x:::::x  x:::::x  
+ *                   x:::::x    x:::::x 
+ *              THE xxxxxxx      xxxxxxx TOOLKIT
+ *                    
+ *                  http://www.goXTK.com
+ *                   
+ * Copyright (c) 2012 The X Toolkit Developers <dev@goXTK.com>
+ *                   
+ *    The X Toolkit (XTK) is licensed under the MIT License:
+ *      http://www.opensource.org/licenses/mit-license.php
+ *
+ * LESSON 11 - Slice it with colors!
+ */
+-->
+
+<html>
+<head>
+<title>XTK LESSON 11</title>
+<script type="text/javascript" src="http://get.goXTK.com/xtk_edge.js"></script>
+<script type="text/javascript" src="http://get.goXTK.com/xtk_xdat.gui.js"></script>
+<script>
+window.onload = function() {
+
+  // create and initialize a 3D renderer
+  var r = new X.renderer3D();
+  r.init();
+  
+  // create a X.volume
+  var volume = new X.volume();
+  // .. and attach the single-file dicom in .NRRD format
+  // this works with gzip/gz/raw encoded NRRD files but XTK also supports other
+  // formats like MGH/MGZ
+  volume.file = 'MNI152_T1_2mm_brain.nii.gz';
+  // we also attach a label map to show segmentations on a slice-by-slice base
+  //volume.labelmap.file = 'Thresholded.nii.gz';
+
+  var volume2 = new X.volume();
+  volume2.file = 'Thresholded.nii.gz';
+  volume2.color = [255, 0, 0];
+  // volume2.labelmap.file = 'Thresholded.nii.gz';
+
+  // // .. and use a color table to map the label map values to colors
+  // //volume.labelmap.colortable.file = 'labelstuff.txt';
+  // volume2.labelmap.colortable.file = 'labelstuff.txt';
+  
+  // add the volume
+  r.add(volume);
+  r.add(volume2);
+  
+  // the onShowtime method gets executed after all files were fully loaded and
+  // just before the first rendering attempt
+  r.onShowtime = function() {
+
+    //
+    // The GUI panel
+    //
+    // (we need to create this during onShowtime(..) since we do not know the
+    // volume dimensions before the loading was completed)
+    
+    var gui = new dat.GUI();
+    
+    // the following configures the gui for interacting with the X.volume
+    var volumegui = gui.addFolder('Volume');
+    // now we can configure controllers which..
+    // .. switch between slicing and volume rendering
+    var vrController = volumegui.add(volume, 'volumeRendering', 0.5);
+    // .. configure the volume rendering opacity
+    var opacityController = volumegui.add(volume, 'opacity', 0, 1).listen();
+    // .. and the threshold in the min..max range
+    var lowerThresholdController = volumegui.add(volume, 'lowerThreshold',
+        volume.min, volume.max);
+    var upperThresholdController = volumegui.add(volume, 'upperThreshold',
+        volume.min, volume.max);
+    // the indexX,Y,Z are the currently displayed slice indices in the range
+    // 0..dimensions-1
+    var sliceXController = volumegui.add(volume, 'indexX', 0,
+        volume.dimensions[0] - 1);
+    var sliceYController = volumegui.add(volume, 'indexY', 0,
+        volume.dimensions[1] - 1);
+    var sliceZController = volumegui.add(volume, 'indexZ', 0,
+        volume.dimensions[2] - 1);
+    volumegui.open();
+
+    var volumegui2 = gui.addFolder('Volume2');
+    // now we can configure controllers which..
+    // .. switch between slicing and volume rendering
+    var vrController2 = volumegui2.add(volume2, 'volumeRendering', 0.5);
+    var vMapVisibleController2 = volumegui2.add(volume2, 'visible');
+
+    // .. configure the volume rendering opacity
+    var opacityController2 = volumegui2.add(volume2, 'opacity', 0, 1).listen();
+    // .. and the threshold in the min..max range
+    var lowerThresholdController2 = volumegui2.add(volume2, 'lowerThreshold',
+        volume2.min, volume2.max);
+    var upperThresholdController2 = volumegui2.add(volume2, 'upperThreshold',
+        volume2.min, volume2.max);
+    // the indexX,Y,Z are the currently displayed slice indices in the range
+    // 0..dimensions-1
+    //var sliceXController2 = volumegui2.add(volume2, 'indexX', 0,
+    //    volume.dimensions[0] - 1);
+    //var sliceYController2 = volumegui2.add(volume2, 'indexY', 0,
+    //    volume2.dimensions[1] - 1);
+    //var sliceZController2 = volumegui.add(volume2, 'indexZ', 0,
+    //    volume2.dimensions[2] - 1);
+    volumegui2.open();
+    
+
+    // and this configures the gui for interacting with the label map overlay
+    // var labelmapgui = gui.addFolder('Label Map');
+    // var labelMapVisibleController = labelmapgui.add(volume.labelmap, 'visible');
+    // var labelMapOpacityController = labelmapgui.add(volume.labelmap, 'opacity',
+    //     0, 1);
+    // var labellowerThresholdController = labelmapgui.add(volume.labelmap, 'lowerThreshold',
+    //     volume.labelmap.min, volume.labelmap.max);
+    // var labelupperThresholdController = labelmapgui.add(volume.labelmap, 'upperThreshold',
+    //     volume.labelmap.min, volume.labelmap.max);    
+    // var labelvrController = labelmapgui.add(volume.labelmap, 'volumeRendering', 1);
+    // labelmapgui.open();
+    
+  };
+  
+  // adjust the camera position a little bit, just for visualization purposes
+  r.camera.position = [120, 80, 120];
+  
+  // showtime! this triggers the loading of the volume and executes
+  // r.onShowtime() once done
+  r.render();
+  
+};
+</script>
+<link rel="stylesheet" type="text/css" href="http://lessons.goxtk.com/11/demo.css">
+</head>
+
+<body>
+
+</body>
+</html>

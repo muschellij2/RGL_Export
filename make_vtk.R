@@ -1,10 +1,18 @@
 rm(list=ls())
-f <- function(x, y, z)x^2+y^2+z^2
+f <- function(x, y, z) x^2+y^2+z^2
 x <- seq(-2,2,len=20)
-ball <- contour3d(f,4,x,x,x, draw=FALSE)
+# ball <- contour3d(f,4,x,x,x, draw=FALSE)
+# drawScene.rgl(ball)
+
+template <- readNIfTI("MNI152_T1_2mm_brain.nii.gz", reorient=FALSE)
+cut <- 1000
+
+dtemp <- dim(template)
+ball <- contour3d(template, x=1:dtemp[1], y=1:dtemp[2], z=1:dtemp[3], level = cut, alpha = 0.1, draw = FALSE)
 drawScene.rgl(ball)
 allids <- rgl.ids()
 id <- allids$id[allids$type == "triangles"]
+
 filename="test.vtk"
 
 
@@ -28,7 +36,7 @@ filename="test.vtk"
               dat[,7], dat[,8], dat[,9]), file = f, sep="")
   mat <- matrix(0:(n3-1), ncol = 3, byrow=TRUE)
   print(n)
-  cat(sprintf("\nTRIANGLE_STRIPS %d %d\n", n, n3), file = f, sep="")
+  cat(sprintf("\nPOLYGONS %d %d\n", n, n3), file = f, sep="")
   cat(sprintf("3 %d %d %d\n", mat[,1], mat[, 2], mat[, 3]), file = f, sep="")
 
 ## -1 since 0 indexing system
@@ -47,14 +55,14 @@ filename="test.vtk"
 #   l[[irow]] <- sort(c(irow-1, l[[irow]]))
 # }
 
-  dat <- matrix(t(norms), ncol=9, byrow=TRUE)
-#   cat(sprintf("\nPOINT_DATA %d \nNORMALS Normals float \n", n3), file = f, sep="")
-#   cat(sprintf("%f %f %f %f %f %f %f %f %f\n", dat[,1], dat[,2], dat[,3],
-#               dat[,4], dat[,5], dat[,6], 
-#               dat[,7], dat[,8], dat[,9]), file = f, sep="")
-cat(sprintf("\nPOINT_DATA %d \nNORMALS Normals float \n", n), file = f, sep="")
-cat(sprintf("%f %f %f\n", dat[,1], dat[,2], dat[,3]
-            ), file = f, sep="")
+  # dat <- matrix(t(norms), ncol=9, byrow=TRUE)
+# #   cat(sprintf("\nPOINT_DATA %d \nNORMALS Normals float \n", n3), file = f, sep="")
+# #   cat(sprintf("%f %f %f %f %f %f %f %f %f\n", dat[,1], dat[,2], dat[,3],
+# #               dat[,4], dat[,5], dat[,6], 
+# #               dat[,7], dat[,8], dat[,9]), file = f, sep="")
+# cat(sprintf("\nPOINT_DATA %d \nNORMALS Normals float \n", n), file = f, sep="")
+# cat(sprintf("%f %f %f\n", dat[,1], dat[,2], dat[,3]
+            # ), file = f, sep="")
 
   invisible(NULL)  
 
@@ -63,39 +71,3 @@ cat(sprintf("%f %f %f\n", dat[,1], dat[,2], dat[,3]
 
 #}
 
-
-# 
-# 
-# make_vtk <- function(obj, filename="test.vtk"){
-#   f <- file(filename, open = "w")
-#   on.exit(close(f))
-#   start <- c("# vtk DataFile Version 3.0", "3D Plot data", "ASCII")
-#   v1 <- obj$v1
-#   v2 <- obj$v2
-#   v3 <- obj$v3
-#   nd <- nrow(v1)
-#   start <- c(start, "DATASET POLYDATA", paste("POINTS ", nd*3, " float", sep=""))
-#   cat(start, sep="\n", file=f)
-#   dat <- cbind(v1, v2, v3)
-#   cat(sprintf("%f %f %f %f %f %f %f %f %f\n", dat[,1], dat[,2], dat[,3],
-#               dat[,4], dat[,5], dat[,6], 
-#               dat[,7], dat[,8], dat[,9]), file = f, sep="")
-#   mat <- matrix(1:(nd*3), ncol = 3, byrow=TRUE)
-#   #mat <- cbind(rep(3, nd), mat)
-#   print(nd)
-#   cat(sprintf("\nTRIANGLE_STRIPS %d %d\n", nd, nd*3), file = f, sep="")
-#   cat(sprintf("3 %d %d %d\n", mat[,1], mat[, 2], mat[, 3]), file = f, sep="")
-#   
-#   cat(sprintf("\nPOINT_DATA %d \nNORMALS Normals float \n", nd*3), file = f, sep="")
-#   dat <- matrix(1, ncol=ncol(dat), nrow=nrow(dat))
-#   cat(sprintf("%f %f %f %f %f %f %f %f %f\n", dat[,1], dat[,2], dat[,3],
-#               dat[,4], dat[,5], dat[,6], 
-#               dat[,7], dat[,8], dat[,9]), file = f, sep="")
-#   #cat(sprintf("3 %d %d %d", mat[,1], mat[, 2], mat[, 3]), file = f, sep="")
-#   # cat("\n", file = f)
-#   # cat(sprintf("%d ", nd:(nd*2)), file = f)
-#   # cat(sprintf("%d ", (nd*2+1):(nd*3)), file = f)
-#   invisible(NULL)  
-# }
-# 
-# 
